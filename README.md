@@ -13,7 +13,19 @@ Accurate atom mapping is critical for understanding chemical reactions, reaction
 - Symmetry-aware refinement using the Weisfeiler-Lehman algorithm.
 - Comparison with other training strategies
 
+# model architecture 
 
+[fig_1.pdf](https://github.com/user-attachments/files/18189251/fig_1.pdf)
+
+
+
+# Example
+[fig_3.pdf](https://github.com/user-attachments/files/18189255/fig_3.pdf)
+
+
+
+# Environment
+setup_env.sh: Configuration file for the required environment.
 # Models
 
 **Vanilla Model** 
