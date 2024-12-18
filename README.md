@@ -7,13 +7,9 @@ This repository contains the implementation of SAMMNet, a Symmetry-Aware Multita
 
 Accurate atom mapping is critical for understanding chemical reactions, reaction prediction, and drug design. SAMMNet is a novel framework that combines multitask learning with symmetry-aware graph matching to enhance atom mapping accuracy.
 
-## Features
-- Implementation of SAMMNet using Graph Neural Networks (GNNs).
-- Support for multitask learning with auxiliary node classification tasks.
-- Symmetry-aware refinement using the Weisfeiler-Lehman algorithm.
-- Comparison with other training strategies
 
-# model architecture 
+
+# Model architecture 
 <img src="https://github.com/user-attachments/assets/34b6ded1-d9de-48f3-81b6-247d7db81836" alt="Model Architecture" width="500"/>
 
 
