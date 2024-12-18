@@ -147,9 +147,6 @@ if __name__ =='__main__':
 
     model = MULTIGIN(32,50, 5)
     print(model)
-
-    # Forward pass
-
     x = torch.randn(4, 32)
     edge_index = torch.tensor([[0, 1, 1, 2, 2, 3], [1, 0, 2, 1, 3, 2]])
     data = Data(x=x, edge_index=edge_index)
