@@ -14,14 +14,15 @@ Accurate atom mapping is critical for understanding chemical reactions, reaction
 - Comparison with other training strategies
 
 # model architecture 
-![Picture 1](https://github.com/user-attachments/assets/34b6ded1-d9de-48f3-81b6-247d7db81836)
+<img src="https://github.com/user-attachments/assets/34b6ded1-d9de-48f3-81b6-247d7db81836" alt="Model Architecture" width="500"/>
 
 
 
 
 
 # Example
-![Picture 3](https://github.com/user-attachments/assets/76a3f53f-6ef6-445c-bed3-510aa7331471)
+<img src="https://github.com/user-attachments/assets/76a3f53f-6ef6-445c-bed3-510aa7331471" alt="Example" width="500"/>
+
 
 
 
