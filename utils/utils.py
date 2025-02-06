@@ -173,17 +173,18 @@ def get_symmetry_aware_atom_mapping(soft_matching, data):
     pred = pred[:data.act_n_p]
     atom_to_set = get_atom_to_set(data)
 
-    replaced_atoms = set()
+    assigned_atoms = {}
 
     for i, pr in enumerate(pred):
         if pr in atom_to_set:
-            atom_set = atom_to_set[pr]
-            if len(atom_set) > 1:# and pr not in replaced_atoms
-                #print('atom with atomset larger than one', pr)
-                available_atoms = sorted([a for a in atom_set if a not in replaced_atoms and data.y_r[a].item() != -1])# and a in pred
-                #print('available atoms', available_atoms)
-                pred[i] = available_atoms[0] if len(available_atoms) > 0 else pr
-                replaced_atoms.add(pr)
+            atom_set = sorted(atom_to_set[pr])  # Sort to maintain order
+            set_id = tuple(atom_set)
+            if set_id not in assigned_atoms:
+                assigned_atoms[set_id] = set()               
+            available_atoms = [a for a in atom_set if a not in assigned_atoms[set_id]]
+            if available_atoms:
+                pred[i] = available_atoms[0]  # Assign unique atom
+                assigned_atoms[set_id].add(available_atoms[0])
 
     return torch.tensor(pred)
 
