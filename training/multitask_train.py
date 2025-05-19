@@ -57,7 +57,7 @@ elif model_name == 'GCN':
 elif model_name == 'GIN':
     gnn = MULTIGIN(in_channels, out_channels, n_classes, n_layers=n_layers)
 else:
-    print('Not a valid model')
+    raise ValueError(f"Invalid model name: {model_name}")
 gnn = gnn.to(device)
 
 # Define optimizer and loss
@@ -65,11 +65,6 @@ gnn = gnn.to(device)
 optimizer = Adam(gnn.parameters(), lr=lr)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
 criterion = torch.nn.CrossEntropyLoss()
-
-optimizer = Adam(gnn.parameters(), lr=lr)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
-criterion = torch.nn.CrossEntropyLoss()
-
 
 train_losses = []
 valid_losses = []
@@ -90,8 +85,6 @@ for epoch in range(num_epochs):
     total_correct_mask = 0.0
     total_train_accuracy_mask = 0.0
     total_symmetry_aware_accuracies = 0.0
-
-
 
     for step, data in enumerate(train_loader):
         optimizer.zero_grad()
@@ -132,7 +125,7 @@ for epoch in range(num_epochs):
         total_correct_mask += n_coorect_mask
         n_masked_nodes= data.masked_node_labels.size(0)
         total_nodes_mask += n_masked_nodes
-        total_train_accuracy_mask += total_correct_mask / total_nodes_mask
+        total_train_accuracy_mask = total_correct_mask / total_nodes_mask
 
     # Calculate average training loss for the epoch
     avg_train_loss = total_train_loss / len(train_loader)
@@ -165,7 +158,7 @@ for epoch in range(num_epochs):
             ground_truth = data.p2r_mapper
             valid_mask = ~data.y_r != -1  # Mask for valid nodes
 
-            loss = F.nll_loss(F.log_softmax(soft_matching[valid_mask], dim=-1), ground_truth[valid_mask])
+            loss_match = F.nll_loss(F.log_softmax(soft_matching[valid_mask], dim=-1), ground_truth[valid_mask])
             loss_mask = criterion(out_mask[data.mask], data.mapped_labels)
             loss =0.7* loss_match + 0.3* loss_mask
             total_valid_loss += loss.item()
@@ -238,7 +231,7 @@ params = {
     "valid_loss": avg_valid_loss,
     "train_accuracy": average_train_accuracy,
     "valid_accuracy": average_valid_accuracy,
-    f'Symmetry_aware Acc: {average_symmetry_aware_accuracy: .4f}'
+    f'Symmetry_aware Acc: {average_symmetry_aware_accuracy: .4f}',
     "path": path 
 }
 
