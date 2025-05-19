@@ -35,7 +35,6 @@ mask_ratio = 0.15
 batch_size= 4
 path = f'multitask_results/{model_name}/13_12'
 
-
 if not os.path.exists(path):
     os.makedirs(path)
 
@@ -43,7 +42,6 @@ print('Loading data...')
 
 train_set = MoleculeDataset(root="../data/", filename="train.csv")
 validation_set = MoleculeDataset(root="../data/", filename="valid.csv")
-
 
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, follow_batch=['x_r', 'x_p'])
 validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False, follow_batch=['x_r', 'x_p'])
@@ -105,19 +103,13 @@ for epoch in range(num_epochs):
         loss_match = F.nll_loss(F.log_softmax(soft_matching[valid_mask], dim=-1), ground_truth[valid_mask])
         loss_mask = criterion(out_mask[data.mask], data.mapped_labels)
         loss =0.7* loss_match + 0.3* loss_mask
-
         accuracy = calculate_accuracy(soft_matching, data)
         total_train_accuracies += accuracy
         total_train_loss += loss.item()
         symmetry_aware_accuracy = get_symmetry_aware_accuracy(symmetry_aware_mapping, data)
-
         total_symmetry_aware_accuracies += symmetry_aware_accuracy
-
-
         loss.backward()
         optimizer.step()
-
-
         _, predicted_index = out_mask[data.mask].max(dim=1)
         predicted = [index_to_atom_type[p.item()] for p in predicted_index]
         predicted = torch.tensor(predicted)
@@ -125,8 +117,8 @@ for epoch in range(num_epochs):
         total_correct_mask += n_coorect_mask
         n_masked_nodes= data.masked_node_labels.size(0)
         total_nodes_mask += n_masked_nodes
-        total_train_accuracy_mask = total_correct_mask / total_nodes_mask
-
+        
+    total_train_accuracy_mask = total_correct_mask / total_nodes_mask
     # Calculate average training loss for the epoch
     avg_train_loss = total_train_loss / len(train_loader)
     train_losses.append(avg_train_loss)
@@ -142,7 +134,6 @@ for epoch in range(num_epochs):
     total_nodes_mask = 0.0
     total_correct_mask = 0.0
     total_valid_accuracy_mask = 0.0
-
 
     with torch.no_grad():
         for data in validation_loader:
@@ -166,15 +157,13 @@ for epoch in range(num_epochs):
             accuracy = calculate_accuracy(soft_matching, data)
             total_valid_accuracies += accuracy
 
-        
-
             _, predicted_index = out_mask[data.mask].max(dim=1)
             predicted = [index_to_atom_type[p.item()] for p in predicted_index]
             predicted = torch.tensor(predicted)
             total_correct_mask += (predicted == data.masked_node_labels).sum().item()
             total_nodes_mask += data.masked_node_labels.size(0)
-            total_valid_accuracy_mask += total_correct_mask / total_nodes_mask
-
+    
+    total_valid_accuracy_mask = total_correct_mask / total_nodes_mask
     avg_valid_loss = total_valid_loss / len(validation_loader)
     valid_losses.append(avg_valid_loss)
     average_valid_accuracy = total_valid_accuracies / len(validation_loader)
@@ -185,7 +174,6 @@ for epoch in range(num_epochs):
 
     average_symmetry_aware_accuracy = total_symmetry_aware_accuracies / len(train_loader)
     train_symmetry_aware_accuracies.append(average_symmetry_aware_accuracy)
-
 
     # Learning rate scheduling
     scheduler.step()
@@ -212,8 +200,6 @@ write_data(f'{path}/accuracies_train.txt', train_accuracies)
 write_data(f'{path}/accuracies_valid.txt', valid_accuracies)
 write_data(f'{path}/losses_valid.txt', valid_losses)
 write_data(f'{path}/train_symmetry_aware_accuracies.txt', train_symmetry_aware_accuracies)
-
-
 
 import json
 
